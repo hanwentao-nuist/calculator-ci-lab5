@@ -28,3 +28,9 @@ above reflects the latest main-branch workflow status.
 This lab implements continuous integration, not automatic deployment.
 See the experiment history for the deliberate subtraction regression
 and its subsequent repair. Do not merge the demonstration bug into new work.
+
+## Recorded CI experiment
+
+- [01-initial-green: success](https://github.com/hanwentao-nuist/calculator-ci-lab5/actions/runs/38759899459)
+- [02-intentional-red: failure](https://github.com/hanwentao-nuist/calculator-ci-lab5/actions/runs/38761971058)
+- [03-fixed-green: success](https://github.com/hanwentao-nuist/calculator-ci-lab5/actions/runs/38762095886)
