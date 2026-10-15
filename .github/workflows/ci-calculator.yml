@@ -1,0 +1,32 @@
+name: Calculator CI # Display name in the Actions tab.
+on: # Events that start the workflow.
+  push: # Validate commits pushed to the main branch.
+    branches: [main] # Ignore pushes to other branches.
+  pull_request: # Validate proposed changes before merging.
+    branches: [main] # The pull request must target main.
+permissions: # Restrict the token granted to the workflow.
+  contents: read # Checkout needs read access only.
+jobs: # A workflow can contain multiple jobs.
+  build: # Identifier of the build and test job.
+    name: JDK ${{ matrix.java }} # Label each matrix job.
+    runs-on: ubuntu-latest # Use a GitHub-hosted Linux runner.
+    strategy: # Expand one job into two independent executions.
+      fail-fast: false # Keep the other JDK running after a failure.
+      matrix: # Compatibility configurations to exercise.
+        java: ['17', '21'] # JDK 17 matches local; 21 is the bonus.
+    steps: # Commands run sequentially within each job.
+      - name: Checkout source # Obtain this event's source revision.
+        uses: actions/checkout@v4 # Official repository checkout action.
+      - name: Setup JDK and Maven cache # Install Java and restore cache.
+        uses: actions/setup-java@v4 # Official Java setup action.
+        with: # Inputs passed to setup-java.
+          distribution: temurin # Select Eclipse Temurin OpenJDK.
+          java-version: ${{ matrix.java }} # Pick this matrix entry.
+          cache: maven # Cache dependencies under ~/.m2/repository.
+          cache-dependency-path: pom.xml # Change cache key with the POM.
+      - name: Resolve Maven dependencies # Check dependency availability.
+        run: mvn -B -ntp dependency:resolve # Resolve; not a security scan.
+      - name: Compile calculator # Rebuild production sources cleanly.
+        run: mvn -B -ntp clean compile # Required Maven lifecycle commands.
+      - name: Run JUnit 5 tests # Fail the job if an assertion fails.
+        run: mvn -B -ntp test # Execute all twelve JUnit tests.
