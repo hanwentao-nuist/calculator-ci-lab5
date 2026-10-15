@@ -7,7 +7,7 @@ public class Calculator {
     }
 
     public double subtract(double a, double b) {
-        return a - b;
+        return b - a;
     }
 
     public double multiply(double a, double b) {
